@@ -1,0 +1,40 @@
+{
+    "name": "@tm.is/error",
+    "version": "1.0.0",
+    "description": "",
+    "main": "./dist/lib/index.js",
+    "scripts": {
+        "test": "mocha dist/test",
+        "test-dev": "mocha dist/test -w",
+        "build": "rm -rf dist dist && tsc",
+        "ts": "ts-node lib/",
+        "prepublishOnly": "npm run ci",
+        "format": "prettier --write ./lib/**/*.ts ./test/**/*.ts package.json",
+        "check-format": "prettier -l ./lib/**/*.ts ./test/**/*.ts package.json",
+        "ci": "npm run build && npm run test",
+        "precommit": "npm run check-format && npm run ci",
+        "prepush": "npm run check-format && npm run ci"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@tm.is/tslint-rules": "^1.0.0",
+        "@types/chai": "^4.1.2",
+        "@types/mocha": "^2.2.48",
+        "@types/node": "^9.4.7",
+        "chai": "^3.5.0",
+        "husky": "^0.14.3",
+        "mocha": "^3.1.0",
+        "prettier": "^1.11.1",
+        "sinon": "^4.4.8",
+        "ts-node": "^5.0.1",
+        "tslint": "^5.9.1",
+        "typescript": "^2.7.2"
+    },
+    "files": ["dist/lib", "tsconfig.json"],
+    "types": "./dist/lib/index.d.ts",
+    "module": "./dist/lib/index.js",
+    "dependencies": {
+        "uuid": "^3.2.1"
+    }
+}

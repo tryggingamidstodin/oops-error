@@ -1,0 +1,5 @@
+{
+    "extends": [
+        "@tm.is/tslint-rules"
+    ]
+}
