@@ -32,8 +32,27 @@ At TM we divide operational errors into two categories: User errors and System e
 
 ### User errors
 
-This is allways invalid user input. In this case we want to tell the user what he did wrong. This is done be throwing an instance of TMUserError with some message.
+This is allways invalid user input. In this case we want to tell the user what he did wrong. This is done be throwing an instance of TMUserError with some message. Example:
+
+```javascript
+import { TMUserError } from '@tm.is/tm-error'
+
+export const saveEmail = (userid, email) => {
+    if(!isValidEmail(email)) {
+        throw new TMUserError('Invalid email')
+    }
+    ...
+}
+```
 
 ### System errors
 
 As with programmer errors we don't want to expose them to the client. Just deliver the error id and log it. This is done be throwing an instance of TMSystemError with some message.
+
+```javascript
+import { TMSystemError } from '@tm.is/tm-error'
+
+...
+throw new TMSystemError('some message')
+...
+```
