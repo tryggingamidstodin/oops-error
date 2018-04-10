@@ -1,5 +1,5 @@
 {
-    "name": "@tm.is/error",
+    "name": "oops-error",
     "version": "1.0.0",
     "description": "",
     "main": "./dist/lib/index.js",
@@ -18,7 +18,7 @@
     "author": "",
     "license": "ISC",
     "devDependencies": {
-        "@tm.is/tslint-rules": "^1.0.0",
+        "tslint-config-prettier": "^1.5.0",
         "@types/chai": "^4.1.2",
         "@types/mocha": "^2.2.48",
         "@types/node": "^9.4.7",
