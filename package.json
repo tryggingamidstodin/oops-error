@@ -4,8 +4,10 @@
     "description": "",
     "main": "./dist/lib/index.js",
     "scripts": {
-        "test": "mocha dist/test",
-        "test-dev": "mocha dist/test -w",
+        "test":
+            "mocha  -R min --compilers ts:ts-node/register,tsx:ts-node/register --recursive test",
+        "test-dev":
+            "FEATURES_ON=* mocha -R min --compilers ts:ts-node/register,tsx:ts-node/register --recursive --watch-extensions ts --watch test",
         "build": "rm -rf dist dist && tsc",
         "ts": "ts-node lib/",
         "prepublishOnly": "npm run ci",
@@ -29,7 +31,8 @@
         "sinon": "^4.4.8",
         "ts-node": "^5.0.1",
         "tslint": "^5.9.1",
-        "typescript": "^2.7.2"
+        "typescript": "^2.7.2",
+        "ts-mocha": "^1.1.0"
     },
     "files": ["dist/lib", "tsconfig.json"],
     "types": "./dist/lib/index.d.ts",

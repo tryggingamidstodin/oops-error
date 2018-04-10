@@ -18,6 +18,9 @@ export class Oops extends Error {
 
     constructor(options: IOopsOptions) {
         super(options.message)
+
+        Error.captureStackTrace(this, this.constructor)
+
         this.name = options.name || options.category
         this.category = options.category
         this.context = options.context

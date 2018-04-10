@@ -4,50 +4,100 @@ import {
     Oops,
     programmerErrorHandler,
     systemErrorHandler,
-} from '../lib/index'
+} from '../lib'
 
-describe('SystemError error', () => {
+describe('Oops error class', () => {
     const msg = 'Something happened'
-
-    it('should give correct info', () => {
-        const nativeError = new Error(msg)
-        const recoverableError = new Oops({
-            message: msg,
-            category: 'SystemError',
-        })
-
-        expect(recoverableError.message).to.equal(nativeError.message)
-        expect(recoverableError.name).to.equal('SystemError')
-        expect(recoverableError.toString()).to.equal(`SystemError: ${msg}`)
-        expect(typeof recoverableError.id).to.equal('string')
-
-        // Check that the stack contains a reference to the current file.
-        expect(recoverableError.stack).to.match(
-            /^SystemError(.|\n|\r)+test\.js:.:../
-        )
-
-        const stackStr = err =>
-            err.stack
-                .replace(err.name, 'Error')
-                .replace(/test.js:.:../, '')
-                .replace(/test.js:..:../, '')
-        expect(stackStr(nativeError)).to.equal(stackStr(recoverableError))
+    const nativeError = new Error(msg)
+    const oops = new Oops({
+        message: msg,
+        category: 'SystemError',
+        cause: nativeError,
     })
-})
 
-describe('user error', () => {
-    it('should be recoverable', () => {
-        const msg = 'Something happened'
-        const userError = new Oops({
-            message: msg,
-            category: 'UserError',
+    it('should take message from options', () => {
+        expect(oops.message).to.equal(msg)
+    })
+
+    it('name should default to given category', function() {
+        expect(oops.name).to.equal('SystemError')
+    })
+
+    it('tostring should concat name and message', function() {
+        expect(oops.toString()).to.equal(`SystemError: ${msg}`)
+    })
+
+    it('should give error an uuid', function() {
+        expect(oops.id.split('-').length).to.equal(5)
+    })
+
+    it('should contain message', function() {
+        expect(oops.message).to.equal(msg)
+    })
+
+    it('should contain test file reference in stack trace', function() {
+        expect(oops.stack).to.match(/^SystemError(.|\n|\r)+test\.([jt])s:..:../)
+    })
+
+    it('should have name SystemError', function() {
+        expect(oops.name).to.equal('SystemError')
+    })
+
+    const stackStr = err =>
+        err.stack
+            .replace(err.name, 'Error')
+            .replace(/test.([tj])s:.+:.+/, '')
+            .replace(/test.([tj])s:.+:.+/, '')
+            .trim()
+
+    it('stack should look the same as for a native Error object', function() {
+        expect(stackStr(nativeError)).to.equal(stackStr(oops))
+    })
+
+    describe('fullstack', () => {
+        let fullStack: string
+
+        before(function() {
+            try {
+                throw new Error('Lowlevel error')
+            } catch (err1) {
+                try {
+                    throw new Oops({
+                        message: 'Midlevel error',
+                        category: 'SystemError',
+                        cause: err1,
+                        context: {
+                            foo: 'bar',
+                        },
+                    })
+                } catch (err2) {
+                    try {
+                        throw new Oops({
+                            message: 'Highlevel error',
+                            category: 'SystemError',
+                            cause: err2,
+                            context: {
+                                foo: 'bar',
+                            },
+                        })
+                    } catch (err3) {
+                        fullStack = err3.fullStack() || ''
+                    }
+                }
+            }
         })
 
-        expect(userError.stack).to.match(/^UserError(.|\n|\r)+test\.js:..:../)
-        expect(userError.message).to.equal(msg)
-        expect(userError.name).to.equal('UserError')
-        expect(userError.toString()).to.equal(`UserError: ${msg}`)
-        expect(typeof userError.id).to.equal('string')
+        it('should contain low level error', () => {
+            expect(fullStack).to.include('Lowlevel error')
+        })
+
+        it('should have mid level error', function() {
+            expect(fullStack).to.include('Midlevel error')
+        })
+
+        it('should contain high level error', function() {
+            expect(fullStack).to.include('Highlevel error')
+        })
     })
 })
 
@@ -79,40 +129,6 @@ describe('assertUserInput', () => {
     })
 })
 
-describe('fullstack', () => {
-    it('should have get full stack', () => {
-        try {
-            throw new Error('Lowlevel error')
-        } catch (err1) {
-            try {
-                throw new Oops({
-                    message: 'Midlevel error',
-                    category: 'SystemError',
-                    cause: err1,
-                    context: {
-                        foo: 'bar',
-                    },
-                })
-            } catch (err2) {
-                try {
-                    throw new Oops({
-                        message: 'Highlevel error',
-                        category: 'SystemError',
-                        cause: err2,
-                        context: {
-                            foo: 'bar',
-                        },
-                    })
-                } catch (err3) {
-                    const fullStack = err3.fullStack() || ''
-                    expect(fullStack).to.include('Lowlevel error')
-                    expect(fullStack).to.include('Midlevel error')
-                    expect(fullStack).to.include('Highlevel error')
-                }
-            }
-        }
-    })
-})
 describe('Error handler function test', () => {
     const badFunc = () => Promise.reject(new Error('test error'))
     it('should have programmer error constructor function', () => {
@@ -127,6 +143,7 @@ describe('Error handler function test', () => {
                 expect(err.category).to.eq('ProgrammerError')
             })
     })
+
     it('should have system error constructor function', () => {
         return badFunc()
             .catch(systemErrorHandler('test message', { testId: 1234567 }))
