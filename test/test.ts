@@ -108,7 +108,6 @@ describe('fullstack', () => {
                     expect(fullStack).to.include('Lowlevel error')
                     expect(fullStack).to.include('Midlevel error')
                     expect(fullStack).to.include('Highlevel error')
-                    console.log(fullStack.split('\n'))
                 }
             }
         }
