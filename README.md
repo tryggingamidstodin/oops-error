@@ -1,4 +1,4 @@
-# TM Errors
+# Errors
 
 It is recommended in nodejs to divide all error in to two categories: Operational errors and programmer errors
 https://www.joyent.com/node-js/production/design/errors
@@ -28,18 +28,24 @@ Operational errors represent run-time problems experienced by correctly-written 
 *   system is out of memory
 *   data from some datasource is missing or not as expected
 
-At TM we divide operational errors into two categories: User errors and System error
+We divide operational errors into two categories: User errors and System error
 
 ### User errors
 
-This is allways invalid user input. In this case we want to tell the user what he did wrong. This is done be throwing an instance of TMUserError with some message. Example:
+This is allways invalid user input. In this case we want to tell the user what he did wrong. This is done be throwing an Oops instance with some context. Example:
 
 ```javascript
-import { TMUserError } from '@tm.is/tm-error'
+import { Oops } from 'oops-error'
 
-export const saveEmail = (userid, email) => {
+export const sendEmail = (email) => {
     if(!isValidEmail(email)) {
-        throw new TMUserError('Invalid email')
+        throw new Oops({
+            message: 'invalid email',
+            category: 'UserError',
+            context: {
+                email,
+            },
+        })
     }
     ...
 }
@@ -47,12 +53,14 @@ export const saveEmail = (userid, email) => {
 
 ### System errors
 
-As with programmer errors we don't want to expose them to the client. Just deliver the error id and log it. This is done be throwing an instance of TMSystemError with some message.
+For promise chains we use handling functions in our catch clauses. The error should only expose an error id to the client. Example:
 
 ```javascript
-import { TMSystemError } from '@tm.is/tm-error'
+import { programmerErrorHandler } from 'oops-error'
 
 ...
-throw new TMSystemError('some message')
+export const doSomething = (params) => {
+    somePromiseFunction().catch(programmerErrorHandler('failed to do something', {params}))
+}
 ...
 ```
