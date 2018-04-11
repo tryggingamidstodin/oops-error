@@ -19,27 +19,27 @@ describe('Oops error class', () => {
         expect(oops.message).to.equal(msg)
     })
 
-    it('name should default to given category', function() {
+    it('name should default to given category', () => {
         expect(oops.name).to.equal('SystemError')
     })
 
-    it('tostring should concat name and message', function() {
+    it('tostring should concat name and message', () => {
         expect(oops.toString()).to.equal(`SystemError: ${msg}`)
     })
 
-    it('should give error an uuid', function() {
+    it('should give error an uuid', () => {
         expect(oops.id.split('-').length).to.equal(5)
     })
 
-    it('should contain message', function() {
+    it('should contain message', () => {
         expect(oops.message).to.equal(msg)
     })
 
-    it('should contain test file reference in stack trace', function() {
+    it('should contain test file reference in stack trace', () => {
         expect(oops.stack).to.match(/^SystemError(.|\n|\r)+test\.([jt])s:..:../)
     })
 
-    it('should have name SystemError', function() {
+    it('should have name SystemError', () => {
         expect(oops.name).to.equal('SystemError')
     })
 
@@ -50,14 +50,14 @@ describe('Oops error class', () => {
             .replace(/test.([tj])s:.+:.+/, '')
             .trim()
 
-    it('stack should look the same as for a native Error object', function() {
+    it('stack should look the same as for a native Error object', () => {
         expect(stackStr(nativeError)).to.equal(stackStr(oops))
     })
 
     describe('fullstack', () => {
         let fullStack: string
 
-        before(function() {
+        before(() => {
             try {
                 throw new Error('Lowlevel error')
             } catch (err1) {
@@ -91,11 +91,11 @@ describe('Oops error class', () => {
             expect(fullStack).to.include('Lowlevel error')
         })
 
-        it('should have mid level error', function() {
+        it('should have mid level error', () => {
             expect(fullStack).to.include('Midlevel error')
         })
 
-        it('should contain high level error', function() {
+        it('should contain high level error', () => {
             expect(fullStack).to.include('Highlevel error')
         })
     })
