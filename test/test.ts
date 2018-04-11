@@ -77,7 +77,7 @@ describe('Oops error class', () => {
                             category: 'SystemError',
                             cause: err2,
                             context: {
-                                foo: 'bar',
+                                foo: 'baz',
                             },
                         })
                     } catch (err3) {
@@ -98,59 +98,13 @@ describe('Oops error class', () => {
         it('should contain high level error', () => {
             expect(fullStack).to.include('Highlevel error')
         })
-    })
 
-    describe('fullMessageWithContext', () => {
-        it('should just return message if the error has no context and no cause', () => {
-            const message = 'test'
-            const err = new Oops({ message, category: 'SystemError' })
-            expect(err.fullMessageWithContext()).to.equal(message)
+        it('should include err1 context', () => {
+            expect(fullStack).to.include('{"foo":"bar"}')
         })
 
-        it('should return message with context', () => {
-            const message = 'test'
-            const err = new Oops({
-                message,
-                category: 'SystemError',
-                context: { id: 123, foo: 'bar' },
-            })
-            expect(err.fullMessageWithContext()).to.equal(
-                'test {"id":123,"foo":"bar"}'
-            )
-        })
-
-        it('should return message with context and cause', () => {
-            const message = 'test'
-            const err = new Oops({
-                message,
-                category: 'SystemError',
-                context: { id: 123, foo: 'bar' },
-                cause: new Error('lowlevel error'),
-            })
-            expect(err.fullMessageWithContext().split('\n')).to.deep.equal([
-                'test {"id":123,"foo":"bar"}',
-                'caused by: lowlevel error',
-            ])
-        })
-
-        it('should return message with context and cause with context recursively', () => {
-            const message = 'test'
-            const err = new Oops({
-                message,
-                category: 'SystemError',
-                context: { id: 123, foo: 'bar' },
-                cause: new Oops({
-                    message: 'mid level error',
-                    category: 'SystemError',
-                    context: { id: 321 },
-                    cause: new Error('lowlevel error'),
-                }),
-            })
-            expect(err.fullMessageWithContext().split('\n')).to.deep.equal([
-                'test {"id":123,"foo":"bar"}',
-                'caused by: mid level error {"id":321}',
-                'caused by: lowlevel error',
-            ])
+        it('should include err2 context', () => {
+            expect(fullStack).to.include('{"foo":"baz"}')
         })
     })
 })

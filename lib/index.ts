@@ -29,7 +29,13 @@ export class Oops extends Error {
     }
 
     fullStack = () => {
-        let str = this.stack
+        let str = this.stack || ''
+        if (this.context) {
+            str = str.replace(
+                this.message,
+                this.message + ' ' + JSON.stringify(this.context)
+            )
+        }
         if (this.cause) {
             const cause: any = this.cause
             str += '\n' + (cause.fullStack ? cause.fullStack() : cause.stack)
