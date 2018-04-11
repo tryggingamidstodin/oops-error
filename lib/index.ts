@@ -36,6 +36,22 @@ export class Oops extends Error {
         }
         return str
     }
+
+    fullMessageWithContext = () => {
+        let fullMessage = this.message
+        if (this.context) {
+            fullMessage += ' ' + JSON.stringify(this.context)
+        }
+        if (this.cause) {
+            const cause: any = this.cause
+            fullMessage += `\ncaused by: ${
+                cause.fullMessageWithContext
+                    ? cause.fullMessageWithContext()
+                    : cause.message
+            }`
+        }
+        return fullMessage
+    }
 }
 
 export const getErrorCategory = (err): ErrorCategory => {
