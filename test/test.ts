@@ -77,7 +77,7 @@ describe('Oops error class', () => {
                             category: 'SystemError',
                             cause: err2,
                             context: {
-                                foo: 'bar',
+                                foo: 'baz',
                             },
                         })
                     } catch (err3) {
@@ -97,6 +97,14 @@ describe('Oops error class', () => {
 
         it('should contain high level error', () => {
             expect(fullStack).to.include('Highlevel error')
+        })
+
+        it('should include err1 context', () => {
+            expect(fullStack).to.include('{"foo":"bar"}')
+        })
+
+        it('should include err2 context', () => {
+            expect(fullStack).to.include('{"foo":"baz"}')
         })
     })
 })
