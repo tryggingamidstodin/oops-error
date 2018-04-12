@@ -1,17 +1,12 @@
 import { expect } from 'chai'
-import {
-    assertUserInput,
-    Oops,
-    programmerErrorHandler,
-    systemErrorHandler,
-} from '../lib'
+import { Oops, operationalErrorHandler, programmerErrorHandler } from '../lib'
 
 describe('Oops error class', () => {
     const msg = 'Something happened'
     const nativeError = new Error(msg)
     const oops = new Oops({
         message: msg,
-        category: 'SystemError',
+        category: 'OperationalError',
         cause: nativeError,
     })
 
@@ -20,11 +15,11 @@ describe('Oops error class', () => {
     })
 
     it('name should default to given category', () => {
-        expect(oops.name).to.equal('SystemError')
+        expect(oops.name).to.equal('OperationalError')
     })
 
     it('tostring should concat name and message', () => {
-        expect(oops.toString()).to.equal(`SystemError: ${msg}`)
+        expect(oops.toString()).to.equal(`OperationalError: ${msg}`)
     })
 
     it('should give error an uuid', () => {
@@ -36,11 +31,13 @@ describe('Oops error class', () => {
     })
 
     it('should contain test file reference in stack trace', () => {
-        expect(oops.stack).to.match(/^SystemError(.|\n|\r)+test\.([jt])s:..:../)
+        expect(oops.stack).to.match(
+            /^OperationalError(.|\n|\r)+test\.([jt])s:.:../
+        )
     })
 
-    it('should have name SystemError', () => {
-        expect(oops.name).to.equal('SystemError')
+    it('should have name OperationalError', () => {
+        expect(oops.name).to.equal('OperationalError')
     })
 
     const stackStr = err =>
@@ -64,7 +61,7 @@ describe('Oops error class', () => {
                 try {
                     throw new Oops({
                         message: 'Midlevel error',
-                        category: 'SystemError',
+                        category: 'OperationalError',
                         cause: err1,
                         context: {
                             foo: 'bar',
@@ -74,7 +71,7 @@ describe('Oops error class', () => {
                     try {
                         throw new Oops({
                             message: 'Highlevel error',
-                            category: 'SystemError',
+                            category: 'OperationalError',
                             cause: err2,
                             context: {
                                 foo: 'baz',
@@ -109,34 +106,6 @@ describe('Oops error class', () => {
     })
 })
 
-describe('assertUserInput', () => {
-    describe('falsy values', () => {
-        const falsyExamples = [false, '', undefined, null, 0]
-        falsyExamples.map(ex => {
-            const falsyValue = ex === '' ? '""' : ex
-            it(`should throw UserError if input is ${falsyValue}`, () => {
-                const message = `value ${falsyValue} is falsy`
-                try {
-                    assertUserInput(ex, message)
-                    throw new Error('should throw UserError')
-                } catch (err) {
-                    expect(err.message).to.equal(message)
-                    expect(err.name).to.equal('UserError')
-                }
-            })
-        })
-    })
-
-    describe('truthy values', () => {
-        const truthyExamples = [true, 'a', 1, -1, {}]
-        truthyExamples.map(ex => {
-            it(`should not throw error when input is ${ex}`, () => {
-                assertUserInput(ex, `value ${ex} is truthy`)
-            })
-        })
-    })
-})
-
 describe('Error handler function test', () => {
     const badFunc = () => Promise.reject(new Error('test error'))
     it('should have programmer error constructor function', () => {
@@ -152,16 +121,16 @@ describe('Error handler function test', () => {
             })
     })
 
-    it('should have system error constructor function', () => {
+    it('should have operational error constructor function', () => {
         return badFunc()
-            .catch(systemErrorHandler('test message', { testId: 1234567 }))
+            .catch(operationalErrorHandler('test message', { testId: 1234567 }))
             .then(() => {
                 throw new Error('error handler should throw error onwards')
             })
             .catch(err => {
                 expect(err.context).to.deep.eq({ testId: 1234567 })
                 expect(err.message).to.eq('test message')
-                expect(err.category).to.eq('SystemError')
+                expect(err.category).to.eq('OperationalError')
             })
     })
 })
