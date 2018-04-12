@@ -73,6 +73,15 @@ export const systemErrorHandler = (message: string, context?: {}) => {
     }
 }
 
+export const assert = (value: any, message: string): void => {
+    if (!Boolean(value)) {
+        throw new Oops({
+            message,
+            category: 'SystemError',
+        })
+    }
+}
+
 export const assertUserInput = (input: any, message: string): void => {
     if (!Boolean(input)) {
         throw new Oops({

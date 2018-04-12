@@ -1,5 +1,6 @@
 import { expect } from 'chai'
 import {
+    assert,
     assertUserInput,
     Oops,
     programmerErrorHandler,
@@ -134,6 +135,27 @@ describe('assertUserInput', () => {
                 assertUserInput(ex, `value ${ex} is truthy`)
             })
         })
+    })
+})
+
+describe('assert', () => {
+    it('should throw system error if value is falsy', () => {
+        const value = false
+        const message = `value ${value} is falsy`
+        try {
+            assert(value, message)
+            throw new Error('should throw SystemError')
+        } catch ({ message, name }) {
+            expect({ message, name }).to.deep.equal({
+                message,
+                name: 'SystemError',
+            })
+        }
+    })
+
+    it(`should not throw error when value is truthy`, () => {
+        const value = true
+        assert(value, `value ${value} is truthy`)
     })
 })
 
