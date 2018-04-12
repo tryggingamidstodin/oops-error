@@ -1,6 +1,6 @@
 import { v4 as createId } from 'uuid'
-
-export type ErrorCategory = 'UserError' | 'SystemError' | 'ProgrammerError'
+import { stringifyContext } from './util'
+export type ErrorCategory = 'OperationalError' | 'ProgrammerError'
 
 export interface IOopsOptions {
     name?: string
@@ -33,7 +33,7 @@ export class Oops extends Error {
         if (this.context) {
             str = str.replace(
                 this.message + '\n',
-                this.message + ' ' + JSON.stringify(this.context) + '\n'
+                this.message + ' ' + stringifyContext(this.context) + '\n'
             )
         }
         if (this.cause) {
@@ -62,11 +62,11 @@ export const programmerErrorHandler = (message: string, context?: {}) => {
     }
 }
 
-export const systemErrorHandler = (message: string, context?: {}) => {
+export const operationalErrorHandler = (message: string, context?: {}) => {
     return err => {
         throw new Oops({
             message,
-            category: 'SystemError',
+            category: 'OperationalError',
             cause: err,
             context,
         })
@@ -77,16 +77,7 @@ export const assert = (value: any, message: string): void => {
     if (!Boolean(value)) {
         throw new Oops({
             message,
-            category: 'SystemError',
-        })
-    }
-}
-
-export const assertUserInput = (input: any, message: string): void => {
-    if (!Boolean(input)) {
-        throw new Oops({
-            message,
-            category: 'UserError',
+            category: 'OperationalError',
         })
     }
 }
