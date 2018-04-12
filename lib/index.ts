@@ -1,5 +1,5 @@
 import { v4 as createId } from 'uuid'
-
+import { stringifyContext } from './util'
 export type ErrorCategory = 'UserError' | 'SystemError' | 'ProgrammerError'
 
 export interface IOopsOptions {
@@ -33,7 +33,7 @@ export class Oops extends Error {
         if (this.context) {
             str = str.replace(
                 this.message + '\n',
-                this.message + ' ' + JSON.stringify(this.context) + '\n'
+                this.message + ' ' + stringifyContext(this.context) + '\n'
             )
         }
         if (this.cause) {
