@@ -1,13 +1,11 @@
 {
     "name": "oops-error",
-    "version": "1.0.2",
+    "version": "2.0.0",
     "description": "",
     "main": "./dist/lib/index.js",
     "scripts": {
-        "test":
-            "mocha  -R min --compilers ts:ts-node/register,tsx:ts-node/register --recursive test",
-        "test-dev":
-            "FEATURES_ON=* mocha -R min --compilers ts:ts-node/register,tsx:ts-node/register --recursive --watch-extensions ts --watch test",
+        "test": "mocha  -R min --compilers ts:ts-node/register,tsx:ts-node/register --recursive test",
+        "test-dev": "FEATURES_ON=* mocha -R min --compilers ts:ts-node/register,tsx:ts-node/register --recursive --watch-extensions ts --watch test",
         "build": "rm -rf dist dist && tsc",
         "ts": "ts-node lib/",
         "lint": "tslint --project .",
@@ -35,7 +33,10 @@
         "typescript": "^2.7.2",
         "ts-mocha": "^1.1.0"
     },
-    "files": ["dist/lib", "tsconfig.json"],
+    "files": [
+        "dist/lib",
+        "tsconfig.json"
+    ],
     "types": "./dist/lib/index.d.ts",
     "module": "./dist/lib/index.js",
     "dependencies": {
