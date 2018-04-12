@@ -12,9 +12,6 @@ Programmer errors are bugs in the program. These are things that can always be a
 *   passed a "string" where an object was expected
 *   passed an object where an IP address string was expected
 
-When a programmer error occurs the error is given an id, it is logged and the error id is delivered to the client. This is because we don't want to expose any information about the system to the client.
-The best way to recover from programmer errors is to crash immediately.
-
 ## Operational errors
 
 Operational errors represent run-time problems experienced by correctly-written programs. These are not bugs in the program. In fact, these are usually problems with the system itself. Examples include:
@@ -28,11 +25,9 @@ Operational errors represent run-time problems experienced by correctly-written 
 *   system is out of memory
 *   data from some datasource is missing or not as expected
 
-We divide operational errors into two categories: User errors and System error
+## Examples
 
-### User errors
-
-This is allways invalid user input. In this case we want to tell the user what he did wrong. This is done be throwing an Oops instance with some context. Example:
+### Oops
 
 ```javascript
 import { Oops } from 'oops-error'
@@ -41,7 +36,7 @@ export const sendEmail = (email) => {
     if(!isValidEmail(email)) {
         throw new Oops({
             message: 'invalid email',
-            category: 'UserError',
+            category: 'OperationalError',
             context: {
                 email,
             },
@@ -51,9 +46,9 @@ export const sendEmail = (email) => {
 }
 ```
 
-### System errors
+### programmerErrorHandler
 
-For promise chains we use handling functions in our catch clauses. The error should only expose an error id to the client. Example:
+For promise chains we use handling functions in our catch clauses. Example:
 
 ```javascript
 import { programmerErrorHandler } from 'oops-error'
