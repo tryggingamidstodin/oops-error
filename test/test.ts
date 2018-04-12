@@ -116,12 +116,13 @@ describe('assert', () => {
         const value = false
         const message = `value ${value} is falsy`
         try {
-            assert(value, message)
+            assert(value, message, { foo: 123 })
             throw new Error('should throw OperationalError')
-        } catch ({ message, name }) {
-            expect({ message, name }).to.deep.equal({
+        } catch ({ message, name, context }) {
+            expect({ message, name, context }).to.deep.equal({
                 message,
                 name: 'OperationalError',
+                context: { foo: 123 },
             })
         }
     })

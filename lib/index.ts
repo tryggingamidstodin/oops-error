@@ -73,11 +73,12 @@ export const operationalErrorHandler = (message: string, context?: {}) => {
     }
 }
 
-export const assert = (value: any, message: string): void => {
+export const assert = (value: any, message: string, context?: {}): void => {
     if (!Boolean(value)) {
         throw new Oops({
             message,
             category: 'OperationalError',
+            context,
         })
     }
 }
