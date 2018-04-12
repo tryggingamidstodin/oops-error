@@ -1,5 +1,6 @@
 import { expect } from 'chai'
 import {
+    assert,
     Oops,
     operationalErrorHandler,
     operationalOops,
@@ -109,6 +110,28 @@ describe('Oops error class', () => {
         it('should include err2 context', () => {
             expect(fullStack).to.include('{"foo":"baz"}')
         })
+    })
+})
+
+describe('assert', () => {
+    it('should throw Operational error if value is falsy', () => {
+        const value = false
+        const message = `value ${value} is falsy`
+        try {
+            assert(value, message, { foo: 123 })
+            throw new Error('should throw OperationalError')
+        } catch ({ message, name, context }) {
+            expect({ message, name, context }).to.deep.equal({
+                message,
+                name: 'OperationalError',
+                context: { foo: 123 },
+            })
+        }
+    })
+
+    it(`should not throw error when value is truthy`, () => {
+        const value = true
+        assert(value, `value ${value} is truthy`)
     })
 })
 
