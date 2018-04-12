@@ -1,5 +1,6 @@
 import { v4 as createId } from 'uuid'
 import { stringifyContext } from './util'
+
 export type ErrorCategory = 'OperationalError' | 'ProgrammerError'
 
 export interface IOopsOptions {
@@ -71,4 +72,20 @@ export const operationalErrorHandler = (message: string, context?: {}) => {
             context,
         })
     }
+}
+
+export const operationalOops = (message: string, context?: {}) => {
+    throw new Oops({
+        message,
+        category: 'OperationalError',
+        context,
+    })
+}
+
+export const programmerOops = (message: string, context?: {}) => {
+    throw new Oops({
+        message,
+        category: 'ProgrammerError',
+        context,
+    })
 }

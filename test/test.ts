@@ -1,5 +1,11 @@
 import { expect } from 'chai'
-import { Oops, operationalErrorHandler, programmerErrorHandler } from '../lib'
+import {
+    Oops,
+    operationalErrorHandler,
+    operationalOops,
+    programmerErrorHandler,
+    programmerOops,
+} from '../lib'
 
 describe('Oops error class', () => {
     const msg = 'Something happened'
@@ -32,7 +38,7 @@ describe('Oops error class', () => {
 
     it('should contain test file reference in stack trace', () => {
         expect(oops.stack).to.match(
-            /^OperationalError(.|\n|\r)+test\.([jt])s:.:../
+            /^OperationalError(.|\n|\r)+test\.[jt]s:..:../
         )
     })
 
@@ -132,5 +138,27 @@ describe('Error handler function test', () => {
                 expect(err.message).to.eq('test message')
                 expect(err.category).to.eq('OperationalError')
             })
+    })
+})
+
+describe('operationalOopsThrow', () => {
+    it('should throw oops with category OperationalError', () => {
+        try {
+            throw operationalOops('FooBar', { foo: 'bar' })
+        } catch (e) {
+            expect(e.category).to.eq('OperationalError')
+            expect(e.context.foo).to.eq('bar')
+        }
+    })
+})
+
+describe('programmerOopsThrow', () => {
+    it('should throw oops with category ProgrammerError', () => {
+        try {
+            throw programmerOops('FooBar', { foo: 'bar' })
+        } catch (e) {
+            expect(e.category).to.eq('ProgrammerError')
+            expect(e.context.foo).to.eq('bar')
+        }
     })
 })
