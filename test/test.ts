@@ -7,6 +7,7 @@ import {
     programmerErrorHandler,
     programmerOops,
 } from '../lib'
+import { defensiveGet } from '../lib'
 
 describe('Oops error class', () => {
     const msg = 'Something happened'
@@ -183,5 +184,33 @@ describe('programmerOopsThrow', () => {
             expect(e.category).to.eq('ProgrammerError')
             expect(e.context.foo).to.eq('bar')
         }
+    })
+})
+
+describe('defensive get', () => {
+    describe('faulty getter', () => {
+        const obj: any = undefined
+        const barValue = defensiveGet(() => {
+            obj.bar()
+        })
+
+        it('should return error string from exception thrown by calling getter', () => {
+            expect(barValue).to.equal(
+                "accessing value returned an error: TypeError: Cannot read property 'bar' of undefined"
+            )
+        })
+    })
+
+    describe('working getter', () => {
+        const obj = {
+            bar: () => {
+                return 'foo'
+            },
+        }
+        const barValue = defensiveGet(() => obj.bar())
+
+        it('should return value from getter', () => {
+            expect(barValue).to.equal('foo')
+        })
     })
 })

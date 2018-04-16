@@ -98,3 +98,13 @@ export const programmerOops = (message: string, context?: {}) => {
         context,
     })
 }
+
+export type DefensiveGet = <T>(getter: () => T) => T | string
+
+export const defensiveGet: DefensiveGet = <T>(getter: () => T) => {
+    try {
+        return getter()
+    } catch (e) {
+        return 'accessing value returned an error: ' + e
+    }
+}
