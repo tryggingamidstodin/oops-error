@@ -5,9 +5,9 @@
     "main": "./dist/lib/index.js",
     "scripts": {
         "test":
-            "mocha  -R min --compilers ts:ts-node/register,tsx:ts-node/register --recursive test",
+            "mocha --compilers ts:ts-node/register,tsx:ts-node/register --recursive test",
         "test-dev":
-            "FEATURES_ON=* mocha -R min --compilers ts:ts-node/register,tsx:ts-node/register --recursive --watch-extensions ts --watch test",
+            "mocha -R dot --compilers ts:ts-node/register,tsx:ts-node/register --recursive --watch-extensions ts --watch test",
         "build": "rm -rf dist dist && tsc",
         "ts": "ts-node lib/",
         "lint": "tslint --project .",
