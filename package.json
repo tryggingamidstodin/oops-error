@@ -5,15 +5,16 @@
     "main": "./dist/lib/index.js",
     "scripts": {
         "test":
-            "mocha  -R min --compilers ts:ts-node/register,tsx:ts-node/register --recursive test",
+            "mocha --compilers ts:ts-node/register,tsx:ts-node/register --recursive test",
         "test-dev":
-            "FEATURES_ON=* mocha -R min --compilers ts:ts-node/register,tsx:ts-node/register --recursive --watch-extensions ts --watch test",
+            "mocha -R dot --compilers ts:ts-node/register,tsx:ts-node/register --recursive --watch-extensions ts --watch test",
         "build": "rm -rf dist dist && tsc",
         "ts": "ts-node lib/",
         "lint": "tslint --project .",
         "prepublishOnly": "npm run ci",
         "format": "prettier --write ./lib/**/*.ts ./test/**/*.ts package.json",
         "check-format": "prettier -l ./lib/**/*.ts ./test/**/*.ts package.json",
+        "check-format2": "prettier ./lib/**/*.ts ./test/**/*.ts package.json",
         "ci": "npm run build && npm run test",
         "precommit": "npm run lint && npm run ci",
         "prepush": "npm run check-format && npm run lint && npm run ci"
