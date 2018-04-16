@@ -14,6 +14,7 @@
         "prepublishOnly": "npm run ci",
         "format": "prettier --write ./lib/**/*.ts ./test/**/*.ts package.json",
         "check-format": "prettier -l ./lib/**/*.ts ./test/**/*.ts package.json",
+        "check-format2": "prettier ./lib/**/*.ts ./test/**/*.ts package.json",
         "ci": "npm run build && npm run test",
         "precommit": "npm run lint && npm run ci",
         "prepush": "npm run check-format && npm run lint && npm run ci"

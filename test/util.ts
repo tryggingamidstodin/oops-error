@@ -25,9 +25,9 @@ describe('util', () => {
                 obj.bar()
             })
 
-            it('should return error string from exception thrown by calling getter', ()=> {
+            it('should return error string from exception thrown by calling getter', () => {
                 expect(barValue).to.equal(
-                    'accessing value returned an error: TypeError: Cannot read property \'bar\' of undefined'
+                    "accessing value returned an error: TypeError: Cannot read property 'bar' of undefined"
                 )
             })
         })
@@ -40,7 +40,7 @@ describe('util', () => {
             }
             const barValue = defensiveGet(() => obj.bar())
 
-            it('should return value from getter', ()=> {
+            it('should return value from getter', () => {
                 expect(barValue).to.equal('foo')
             })
         })

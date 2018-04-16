@@ -6,7 +6,7 @@
         "object-literal-sort-keys": [false],
         "member-access": [false],
         "comment-format": [true, "check-space"],
-        "quotemark": [true, "single", "jsx-double"],
+        "quotemark": [false],
         "semicolon": [true, "never"],
         "no-console": [false],
         "no-var-requires": false
