@@ -27,6 +27,7 @@ export class Oops extends Error {
         this.context = options.context
         this.cause = options.cause
         this.id = createId()
+        this.stack = this.fullStack()
     }
 
     fullStack = () => {

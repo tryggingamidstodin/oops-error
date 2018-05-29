@@ -55,8 +55,51 @@ describe('Oops error class', () => {
             .replace(/test.([tj])s:.+:.+/, '')
             .trim()
 
-    it('stack should look the same as for a native Error object', () => {
-        expect(stackStr(nativeError)).to.equal(stackStr(oops))
+    it('stack should supercede that of a native Error object', () => {
+        expect(stackStr(oops)).to.include(stackStr(nativeError))
+    })
+    const makDefaultMultiLevelError = () => {
+        try {
+            throw new Error('Lowlevel error')
+        } catch (err1) {
+            try {
+                throw new Oops({
+                    message: 'Midlevel error',
+                    category: 'OperationalError',
+                    cause: err1,
+                    context: {
+                        foo: 'bar',
+                    },
+                })
+            } catch (err2) {
+                throw new Oops({
+                    message: 'Highlevel error',
+                    category: 'OperationalError',
+                    cause: err2,
+                    context: {
+                        foo: 'baz',
+                    },
+                })
+            }
+        }
+    }
+    describe('log error to terminal', () => {
+        try {
+            makDefaultMultiLevelError()
+        } catch (err) {
+            const tests = [
+                'Lowlevel error',
+                'Midlevel error',
+                'Highlevel error',
+                '{"foo":"bar"}',
+                '{"foo":"baz"}',
+            ]
+            tests.forEach(test => {
+                it('should include ' + test, () => {
+                    expect(err.stack).to.include(test)
+                })
+            })
+        }
     })
 
     describe('fullstack', () => {
@@ -64,31 +107,9 @@ describe('Oops error class', () => {
 
         before(() => {
             try {
-                throw new Error('Lowlevel error')
-            } catch (err1) {
-                try {
-                    throw new Oops({
-                        message: 'Midlevel error',
-                        category: 'OperationalError',
-                        cause: err1,
-                        context: {
-                            foo: 'bar',
-                        },
-                    })
-                } catch (err2) {
-                    try {
-                        throw new Oops({
-                            message: 'Highlevel error',
-                            category: 'OperationalError',
-                            cause: err2,
-                            context: {
-                                foo: 'baz',
-                            },
-                        })
-                    } catch (err3) {
-                        fullStack = err3.fullStack() || ''
-                    }
-                }
+                throw makDefaultMultiLevelError()
+            } catch (err3) {
+                fullStack = err3.fullStack() || ''
             }
         })
 
