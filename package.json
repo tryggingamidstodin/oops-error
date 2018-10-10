@@ -1,12 +1,12 @@
 {
     "name": "oops-error",
-    "version": "2.2.0",
+    "version": "2.3.0",
     "description": "",
     "main": "./dist/lib/index.js",
     "scripts": {
         "test":
-            "mocha --compilers ts:ts-node/register,tsx:ts-node/register --recursive test",
-        "test-dev":
+            "mocha  -R spec --compilers ts:ts-node/register,tsx:ts-node/register --recursive test",
+        "tdd":
             "mocha -R dot --compilers ts:ts-node/register,tsx:ts-node/register --recursive --watch-extensions ts --watch test",
         "build": "rm -rf dist dist && tsc",
         "ts": "ts-node lib/",
@@ -14,7 +14,6 @@
         "prepublishOnly": "npm run ci",
         "format": "prettier --write ./lib/**/*.ts ./test/**/*.ts package.json",
         "check-format": "prettier -l ./lib/**/*.ts ./test/**/*.ts package.json",
-        "check-format2": "prettier ./lib/**/*.ts ./test/**/*.ts package.json",
         "ci": "npm run build && npm run test",
         "precommit": "npm run lint && npm run ci",
         "prepush": "npm run check-format && npm run lint && npm run ci"

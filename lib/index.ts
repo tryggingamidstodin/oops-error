@@ -3,6 +3,16 @@ import { stringifyContext } from './util'
 
 export type ErrorCategory = 'OperationalError' | 'ProgrammerError'
 
+interface IOopsConstants {
+    OperationalError: ErrorCategory
+    ProgrammerError: ErrorCategory
+}
+
+const constants: IOopsConstants = {
+    OperationalError: 'OperationalError',
+    ProgrammerError: 'ProgrammerError',
+}
+
 export interface IOopsOptions {
     name?: string
     message: string
@@ -49,7 +59,7 @@ export const getErrorCategory = (err): ErrorCategory => {
     if (err.category) {
         return err.category as ErrorCategory
     }
-    return 'ProgrammerError'
+    return constants.ProgrammerError
 }
 
 export const programmerErrorHandler = (message: string, context?: {}) => {
@@ -67,7 +77,7 @@ export const operationalErrorHandler = (message: string, context?: {}) => {
     return err => {
         throw new Oops({
             message,
-            category: 'OperationalError',
+            category: constants.OperationalError,
             cause: err,
             context,
         })
@@ -78,25 +88,40 @@ export const assert = (value: any, message: string, context?: {}): void => {
     if (!Boolean(value)) {
         throw new Oops({
             message,
-            category: 'OperationalError',
+            category: constants.OperationalError,
             context,
         })
     }
 }
-export const operationalOops = (message: string, context?: {}) => {
-    throw new Oops({
+
+export const newOperationalOops = (message: string, context?: {}) => {
+    return new Oops({
         message,
-        category: 'OperationalError',
+        category: constants.OperationalError,
         context,
     })
 }
 
-export const programmerOops = (message: string, context?: {}) => {
-    throw new Oops({
+/**
+ * @deprecated use throw newOperationalOops instead.
+ */
+export const operationalOops = (message: string, context?: {}) => {
+    throw newOperationalOops(message, context)
+}
+
+export const newProgrammerOops = (message: string, context?: {}) => {
+    return new Oops({
         message,
-        category: 'ProgrammerError',
+        category: constants.ProgrammerError,
         context,
     })
+}
+
+/**
+ * @deprecated use throw newProgrammerOops() instead.
+ */
+export const programmerOops = (message: string, context?: {}) => {
+    throw newProgrammerOops(message, context)
 }
 
 export type DefensiveGet = <T>(getter: () => T) => T | string
