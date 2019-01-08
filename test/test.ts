@@ -1,6 +1,8 @@
 import { expect } from 'chai'
 import {
     assert,
+    newOperationalOops,
+    newProgrammerOops,
     Oops,
     operationalErrorHandler,
     operationalOops,
@@ -182,6 +184,32 @@ describe('programmerOopsThrow', () => {
         } catch (e) {
             expect(e.category).to.eq('ProgrammerError')
             expect(e.context.foo).to.eq('bar')
+        }
+    })
+    it('should be able to handle optional error object', () => {
+        try {
+            throw new Error('TestError')
+        } catch (e) {
+            try {
+                throw newProgrammerOops('CatchTheTest', {}, e)
+            } catch (error) {
+                expect(error.cause).to.deep.eq(e)
+                expect(error.category).to.eq('ProgrammerError')
+            }
+        }
+    })
+    it('should not override operational oops when throwing programmer oops', () => {
+        try {
+            throw newOperationalOops('TestError')
+        } catch (e) {
+            try {
+                throw newProgrammerOops('CatchTheTest', {}, e)
+            } catch (error) {
+                expect(error.cause).to.deep.eq(e)
+                expect(error.category).to.eq('OperationalError')
+                expect(error.message).to.eq('CatchTheTest')
+                expect(error.cause.message).to.eq('TestError')
+            }
         }
     })
 })
