@@ -55,8 +55,8 @@ export class Oops extends Error {
     }
 }
 
-export const getErrorCategory = (err): ErrorCategory => {
-    if (err.category) {
+export const getErrorCategory = (err?: any): ErrorCategory => {
+    if (err && err.category) {
         return err.category as ErrorCategory
     }
     return constants.ProgrammerError
@@ -109,11 +109,16 @@ export const operationalOops = (message: string, context?: {}) => {
     throw newOperationalOops(message, context)
 }
 
-export const newProgrammerOops = (message: string, context?: {}) => {
+export const newProgrammerOops = (
+    message: string,
+    context?: {},
+    error?: any
+) => {
     return new Oops({
         message,
-        category: constants.ProgrammerError,
+        category: getErrorCategory(error),
         context,
+        cause: error,
     })
 }
 
