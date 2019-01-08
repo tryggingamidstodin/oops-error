@@ -55,7 +55,7 @@ export class Oops extends Error {
     }
 }
 
-export const getErrorCategory = (err): ErrorCategory => {
+export const getErrorCategory = (err?: any): ErrorCategory => {
     if (err && err.category) {
         return err.category as ErrorCategory
     }
