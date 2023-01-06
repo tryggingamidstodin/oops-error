@@ -48,7 +48,7 @@ describe('Oops error class', () => {
         expect(oops.name).to.equal('OperationalError')
     })
 
-    const stackStr = err =>
+    const stackStr = (err) =>
         err.stack
             .replace(err.name, 'Error')
             .replace(/test.([tj])s:.+:.+/, '')
@@ -143,7 +143,7 @@ describe('Error handler function test', () => {
             .then(() => {
                 throw new Error('error handler should throw error onwards')
             })
-            .catch(err => {
+            .catch((err) => {
                 expect(err.context).to.deep.eq({ testId: 1234567 })
                 expect(err.message).to.eq('test message')
                 expect(err.category).to.eq('ProgrammerError')
@@ -156,7 +156,7 @@ describe('Error handler function test', () => {
             .then(() => {
                 throw new Error('error handler should throw error onwards')
             })
-            .catch(err => {
+            .catch((err) => {
                 expect(err.context).to.deep.eq({ testId: 1234567 })
                 expect(err.message).to.eq('test message')
                 expect(err.category).to.eq('OperationalError')

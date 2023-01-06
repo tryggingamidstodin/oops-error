@@ -12,11 +12,11 @@ describe('util', () => {
             const b: any = {}
             a.b = b
             b.a = a
-            expect(stringifyContext(a)).to.equal(`Invalid context: "Converting circular structure to JSON
+            expect(stringifyContext(a)).to
+                .equal(`Invalid context: "Converting circular structure to JSON
     --> starting at object with constructor 'Object'
     |     property 'b' -> object with constructor 'Object'
-    --- property 'a' closes the circle"`
-            )
+    --- property 'a' closes the circle"`)
         })
     })
 })

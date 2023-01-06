@@ -63,7 +63,7 @@ export const getErrorCategory = (err): ErrorCategory => {
 }
 
 export const programmerErrorHandler = (message: string, context?: {}) => {
-    return err => {
+    return (err) => {
         throw new Oops({
             message,
             category: getErrorCategory(err),
@@ -74,7 +74,7 @@ export const programmerErrorHandler = (message: string, context?: {}) => {
 }
 
 export const operationalErrorHandler = (message: string, context?: {}) => {
-    return err => {
+    return (err) => {
         throw new Oops({
             message,
             category: constants.OperationalError,
