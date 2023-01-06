@@ -195,7 +195,7 @@ describe('defensive get', () => {
 
         it('should return error string from exception thrown by calling getter', () => {
             expect(barValue).to.equal(
-                "accessing value returned an error: TypeError: Cannot read property 'bar' of undefined"
+                "accessing value returned an error: TypeError: Cannot read properties of undefined (reading 'bar')"
             )
         })
     })

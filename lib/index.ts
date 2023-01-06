@@ -18,13 +18,13 @@ export interface IOopsOptions {
     message: string
     cause?: Error
     category: ErrorCategory
-    context?: {}
+    context?: { [key: string]: any }
 }
 
 export class Oops extends Error {
     id: string
     category: string
-    context?: {}
+    context?: { [key: string]: any }
     cause?: Error
 
     constructor(options: IOopsOptions) {
