@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - main
+      - master
 jobs:
   deploy:
     name: Publish
@@ -25,6 +25,6 @@ jobs:
         run: |
           npm ci
       - name: publish npm module
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/master'
         run: npm publish
         shell: bash
