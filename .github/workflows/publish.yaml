@@ -1,0 +1,30 @@
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    name: Publish
+    runs-on: ubuntu-latest
+    environment: development
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+      - name: Install_token
+        id: install
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+        shell: bash
+      - name: NPM_install
+        id: npm_install
+        run: |
+          npm ci
+      - name: publish npm module
+        if: github.ref == 'refs/heads/main'
+        run: npm publish
+        shell: bash
