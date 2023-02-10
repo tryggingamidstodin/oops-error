@@ -94,11 +94,16 @@ export const assert = (value: any, message: string, context?: {}): void => {
     }
 }
 
-export const newOperationalOops = (message: string, context?: {}) => {
+export const newOperationalOops = (
+    message: string,
+    context?: {},
+    cause?: Error
+) => {
     return new Oops({
         message,
         category: constants.OperationalError,
         context,
+        cause,
     })
 }
 
@@ -109,11 +114,16 @@ export const operationalOops = (message: string, context?: {}) => {
     throw newOperationalOops(message, context)
 }
 
-export const newProgrammerOops = (message: string, context?: {}) => {
+export const newProgrammerOops = (
+    message: string,
+    context?: {},
+    cause?: Error
+) => {
     return new Oops({
         message,
         category: constants.ProgrammerError,
         context,
+        cause,
     })
 }
 
